@@ -10,16 +10,10 @@ compatibility_date = "2024-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "bcs-quiz-db"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "aafe1c0b-2769-4afc-8477-a970b87c44fa"
 
 # ── Pages deployment config ─────────────────────────────────
-[site]
-bucket = "."
-
-# ── Worker routes (API) ─────────────────────────────────────
-[[routes]]
-pattern = "/api/*"
-zone_name = "workers.dev"
+pages_build_output_dir = "."
 
 # ── Environment variables ───────────────────────────────────
 [vars]

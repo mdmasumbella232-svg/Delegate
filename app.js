@@ -3,7 +3,7 @@
 // ============================================================
 
 // ── Configuration ──────────────────────────────────────────
-const API_BASE = '/api'; // Assuming same domain for Pages + Worker
+const API_BASE = 'https://bcs-quiz-worker.hockstan.workers.dev/api'; // Cloudflare Worker URL
 
 // ── State ──────────────────────────────────────────────────
 let state = {
