@@ -1,14 +1,14 @@
 {
-  "name": "bcs-quiz-worker",
+  "name": "delegate",
   "version": "1.0.0",
-  "description": "Cloudflare Worker API for BCS Quiz App",
+  "description": "Cloudflare Worker API for Delegate App",
   "main": "index.js",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "db:init": "wrangler d1 execute bcs-quiz-db --file=schema.sql",
     "db:init:remote": "wrangler d1 execute bcs-quiz-db --remote --file=schema.sql",
-    "pages:deploy": "wrangler pages deploy .. --project-name=bcs-quiz"
+    "pages:deploy": "wrangler pages deploy .. --project-name=delegate"
   },
   "devDependencies": {
     "wrangler": "^3.0.0"
