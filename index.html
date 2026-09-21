@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>১০তম বিসিএস প্রিলিমিনারি কুইজ</title>
+  <meta name="description" content="১০তম বিসিএস প্রিলিমিনারি প্রশ্ন সমাধান — ইন্টারেক্টিভ কুইজ অ্যাপ। ১০০টি প্রশ্নের মাধ্যমে বিসিএস পরীক্ষার প্রস্তুতি নিন।" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <!-- HOME SCREEN -->
+  <section id="homeScreen" class="screen active">
+    <div class="home-container">
+      <div class="home-badge">Bangladesh Civil Service</div>
+      <div class="logo-wrap">
+        <div class="logo-ring"></div>
+        <div class="logo-icon">&#128218;</div>
+      </div>
+      <h1 class="home-title">10th BCS Quiz</h1>
+      <p class="home-subtitle">Preliminary Exam — All 100 Questions</p>
+
+      <div class="api-status" id="apiStatus">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Checking connection...</span>
+      </div>
+
+      <div class="home-stats">
+        <div class="stat-card"><span class="stat-num">100</span><span class="stat-label">Questions</span></div>
+        <div class="stat-card"><span class="stat-num">6</span><span class="stat-label">Subjects</span></div>
+        <div class="stat-card"><span class="stat-num">90</span><span class="stat-label">Minutes</span></div>
+      </div>
+
+      <div class="name-input-wrap">
+        <label for="playerNameInput">Your name (shown on leaderboard)</label>
+        <input type="text" id="playerNameInput" placeholder="e.g. Rahela Begum" maxlength="60" autocomplete="name" />
+      </div>
+
+      <div class="subject-chips">
+        <span class="chip bangla">Bangla</span>
+        <span class="chip english">English</span>
+        <span class="chip bd">Bangladesh</span>
+        <span class="chip world">International</span>
+        <span class="chip science">Science</span>
+        <span class="chip math">Math</span>
+      </div>
+
+      <div class="filter-row">
+        <label for="subjectFilter">Filter by subject:</label>
+        <select id="subjectFilter" onchange="updateFilterInfo()">
+          <option value="all">All Subjects</option>
+          <option value="bangla">Bangla (1-18)</option>
+          <option value="english">English (19-34)</option>
+          <option value="bangladesh">Bangladesh (35-54)</option>
+          <option value="international">International (55-68)</option>
+          <option value="science">Science (69-84)</option>
+          <option value="math">Math (85-100)</option>
+        </select>
+        <span id="filterInfo" class="filter-info">100 questions</span>
+      </div>
+
+      <div class="home-actions">
+        <button class="btn-primary" id="startQuizBtn" onclick="startQuiz()">
+          <span class="btn-icon">&#9654;</span> Start Quiz
+        </button>
+        <button class="btn-secondary" id="studyModeBtn" onclick="startStudyMode()">
+          <span class="btn-icon">&#128214;</span> Study Mode
+        </button>
+      </div>
+
+      <div class="leaderboard-panel" id="leaderboardPanel">
+        <div class="lb-header">
+          <h3 class="lb-title">&#127942; Leaderboard — Top 10</h3>
+          <button class="btn-ghost-sm" onclick="refreshLeaderboard()">&#128260; Refresh</button>
+        </div>
+        <div id="leaderboardBody">
+          <p class="lb-loading">Loading...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ SCREEN -->
+  <section id="quizScreen" class="screen">
+    <div class="quiz-header">
+      <button class="btn-icon-only" onclick="goHome()" title="Home">&#8592;</button>
+      <div class="quiz-meta">
+        <span id="qSubjectTag" class="subject-tag">Bangla</span>
+        <span id="qProgress" class="progress-text">1 / 100</span>
+      </div>
+      <div class="timer-box" id="timerBox">
+        <span class="timer-icon">&#9201;</span>
+        <span id="timerDisplay">90:00</span>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill"></div></div>
+    </div>
+    <div class="quiz-body">
+      <div class="question-card" id="questionCard">
+        <div class="question-number" id="questionNum">Question 1</div>
+        <p class="question-text" id="questionText">Loading...</p>
+        <div class="options-grid" id="optionsGrid"></div>
+        <div class="question-feedback hidden" id="questionFeedback"></div>
+      </div>
+    </div>
+    <div class="quiz-footer">
+      <button class="btn-nav" id="prevBtn" onclick="prevQuestion()" disabled>&#9664; Prev</button>
+      <div class="question-dots" id="questionDots"></div>
+      <button class="btn-nav btn-next" id="nextBtn" onclick="nextQuestion()">Next &#9654;</button>
+    </div>
+  </section>
+
+  <!-- RESULT SCREEN -->
+  <section id="resultScreen" class="screen">
+    <div class="result-container">
+      <div class="result-header">
+        <div class="trophy-animation" id="trophyAnim">&#127942;</div>
+        <h2 class="result-title">Results</h2>
+        <p class="result-subtitle" id="resultSubtitle">Quiz complete!</p>
+      </div>
+      <div class="score-circle-wrap">
+        <svg class="score-ring" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="85" class="ring-bg"/>
+          <circle cx="100" cy="100" r="85" class="ring-fill" id="scoreRing"/>
+        </svg>
+        <div class="score-center">
+          <span class="score-big" id="scorePercent">0%</span>
+          <span class="score-label">Score</span>
+        </div>
+      </div>
+      <div class="result-stats-grid">
+        <div class="result-stat correct-stat">
+          <span class="rs-icon">&#9989;</span>
+          <span class="rs-num" id="correctCount">0</span>
+          <span class="rs-label">Correct</span>
+        </div>
+        <div class="result-stat wrong-stat">
+          <span class="rs-icon">&#10060;</span>
+          <span class="rs-num" id="wrongCount">0</span>
+          <span class="rs-label">Wrong</span>
+        </div>
+        <div class="result-stat skip-stat">
+          <span class="rs-icon">&#9197;</span>
+          <span class="rs-num" id="skipCount">0</span>
+          <span class="rs-label">Skipped</span>
+        </div>
+      </div>
+      <div class="result-grade" id="resultGrade"></div>
+      <div class="rank-banner hidden" id="rankBanner"></div>
+      <div class="result-subject-breakdown" id="subjectBreakdown"></div>
+      <div class="result-actions">
+        <button class="btn-primary" onclick="reviewAnswers()">Review Answers</button>
+        <button class="btn-secondary" onclick="retakeQuiz()">Retake Quiz</button>
+        <button class="btn-ghost" onclick="goHome()">Home</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEW SCREEN -->
+  <section id="reviewScreen" class="screen">
+    <div class="review-header">
+      <button class="btn-icon-only" onclick="backToResult()">&#8592;</button>
+      <h2>Answer Review</h2>
+      <div class="review-filter-btns">
+        <button class="rfb active" onclick="filterReview('all', this)">All</button>
+        <button class="rfb" onclick="filterReview('correct', this)">Correct</button>
+        <button class="rfb" onclick="filterReview('wrong', this)">Wrong</button>
+      </div>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+  </section>
+
+  <!-- STUDY MODE SCREEN -->
+  <section id="studyScreen" class="screen">
+    <div class="quiz-header">
+      <button class="btn-icon-only" onclick="goHome()">&#8592;</button>
+      <div class="quiz-meta">
+        <span class="subject-tag">Study Mode</span>
+        <span id="sProgress" class="progress-text">1 / 100</span>
+      </div>
+      <button class="btn-ghost-sm" onclick="toggleStudyAnswer()">Show Answer</button>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="studyProgressFill"></div></div>
+    </div>
+    <div class="quiz-body">
+      <div class="question-card study-card" id="studyCard">
+        <div class="question-number" id="studyQNum">Question 1</div>
+        <p class="question-text" id="studyQText"></p>
+        <div class="options-grid study-options" id="studyOptions"></div>
+        <div class="study-answer hidden" id="studyAnswer"></div>
+      </div>
+    </div>
+    <div class="quiz-footer">
+      <button class="btn-nav" id="studyPrev" onclick="studyPrev()">&#9664; Prev</button>
+      <span id="studyDotNav" class="dot-nav-label"></span>
+      <button class="btn-nav btn-next" id="studyNext" onclick="studyNext()">Next &#9654;</button>
+    </div>
+  </section>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

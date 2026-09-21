@@ -1,0 +1,32 @@
+# ==============================================================
+# Cloudflare Pages + Workers + D1 Config — BCS Quiz App
+# ==============================================================
+
+name = "bcs-quiz-worker"
+main = "worker/index.js"
+compatibility_date = "2024-01-01"
+
+# ── D1 Database binding ─────────────────────────────────────
+[[d1_databases]]
+binding = "DB"
+database_name = "bcs-quiz-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# ── Pages deployment config ─────────────────────────────────
+[site]
+bucket = "."
+
+# ── Worker routes (API) ─────────────────────────────────────
+[[routes]]
+pattern = "/api/*"
+zone_name = "workers.dev"
+
+# ── Environment variables ───────────────────────────────────
+[vars]
+APP_NAME = "BCS Quiz"
+APP_VERSION = "1.0.0"
+
+# ── Local dev settings ──────────────────────────────────────
+[dev]
+port = 8787
+local_protocol = "http"
