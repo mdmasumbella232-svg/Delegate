@@ -781,3 +781,40 @@ body {
   color: var(--text-muted); font-size: 0.88rem;
 }
 
+/* -- Bank Screen Styles ---------------------------- */
+.bank-list-container {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow-y: auto;
+  height: calc(100vh - 70px);
+}
+.bank-item {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.bank-item h3 {
+  margin-bottom: 12px;
+  color: #fff;
+}
+.bank-opt {
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+.bank-opt.correct {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #22c55e;
+}
+.bank-note {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  border-left: 3px solid var(--primary-gold);
+  font-size: 0.9rem;
+  color: #ccc;
+}

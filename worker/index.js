@@ -37,12 +37,14 @@ export default {
 
     // ── GET /api/questions ──────────────────────────────────
     if (method === 'GET' && path === '/api/questions') {
+      const exam = url.searchParams.get('exam') || '10th_bcs';
       const subject = url.searchParams.get('subject') || 'all';
 
-      let query = 'SELECT * FROM questions';
-      const params = [];
+      let query = 'SELECT * FROM questions WHERE exam_key = ?';
+      const params = [exam];
+      
       if (subject !== 'all') {
-        query += ' WHERE subject = ?';
+        query += ' AND subject = ?';
         params.push(subject);
       }
       query += ' ORDER BY id ASC';
@@ -52,6 +54,7 @@ export default {
       // Map DB columns → app-friendly shape
       const questions = results.map(r => ({
         id:      r.id,
+        exam:    r.exam_key,
         subject: r.subject,
         q:       r.question_text,
         opts:    [r.opt_a, r.opt_b, r.opt_c, r.opt_d],
@@ -64,6 +67,7 @@ export default {
 
     // ── GET /api/leaderboard ────────────────────────────────
     if (method === 'GET' && path === '/api/leaderboard') {
+      const exam = url.searchParams.get('exam') || '10th_bcs';
       const subject = url.searchParams.get('subject') || 'all';
       const limit   = Math.min(parseInt(url.searchParams.get('limit') || '10', 10), 50);
 
@@ -71,10 +75,12 @@ export default {
         SELECT id, player_name, subject_filter, correct, wrong, skipped, total, time_taken, created_at,
                ROUND(correct * 100.0 / total, 1) AS score_pct
         FROM scores
+        WHERE exam_key = ?
       `;
-      const params = [];
+      const params = [exam];
+      
       if (subject !== 'all') {
-        query += ' WHERE subject_filter = ?';
+        query += ' AND subject_filter = ?';
         params.push(subject);
       }
       query += ' ORDER BY correct DESC, time_taken ASC LIMIT ?';
@@ -91,6 +97,7 @@ export default {
       catch { return err('Invalid JSON body'); }
 
       const {
+        exam_key       = '10th_bcs',
         player_name    = 'অজ্ঞাত',
         subject_filter = 'all',
         answers        = [],   // [{ question_id, user_answer }]
@@ -124,9 +131,9 @@ export default {
 
       // Insert score row
       const scoreInsert = await env.DB
-        .prepare(`INSERT INTO scores (player_name, subject_filter, correct, wrong, skipped, total, time_taken)
-                  VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id`)
-        .bind(player_name.trim().slice(0, 60), subject_filter, correct, wrong, skipped, total, time_taken)
+        .prepare(`INSERT INTO scores (exam_key, player_name, subject_filter, correct, wrong, skipped, total, time_taken)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id`)
+        .bind(exam_key, player_name.trim().slice(0, 60), subject_filter, correct, wrong, skipped, total, time_taken)
         .first();
 
       const scoreId = scoreInsert.id;
@@ -141,8 +148,8 @@ export default {
       // Leaderboard position
       const { results: rankResult } = await env.DB
         .prepare(`SELECT COUNT(*) + 1 AS rank FROM scores
-                  WHERE subject_filter = ? AND (correct > ? OR (correct = ? AND time_taken < ?))`)
-        .bind(subject_filter, correct, correct, time_taken)
+                  WHERE exam_key = ? AND subject_filter = ? AND (correct > ? OR (correct = ? AND time_taken < ?))`)
+        .bind(exam_key, subject_filter, correct, correct, time_taken)
         .all();
 
       const rank = rankResult[0]?.rank ?? 1;

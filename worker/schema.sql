@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS questions;
 -- ── Questions ───────────────────────────────────────────────
 CREATE TABLE questions (
   id           INTEGER PRIMARY KEY,
+  exam_key     TEXT    NOT NULL DEFAULT '10th_bcs',
   subject      TEXT    NOT NULL,
   question_text TEXT   NOT NULL,
   opt_a        TEXT    NOT NULL,
@@ -24,6 +25,7 @@ CREATE TABLE questions (
 -- ── Scores (leaderboard) ────────────────────────────────────
 CREATE TABLE scores (
   id             INTEGER PRIMARY KEY AUTOINCREMENT,
+  exam_key       TEXT    NOT NULL DEFAULT '10th_bcs',
   player_name    TEXT    NOT NULL DEFAULT 'অজ্ঞাত',
   subject_filter TEXT    NOT NULL DEFAULT 'all',
   correct        INTEGER NOT NULL DEFAULT 0,

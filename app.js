@@ -7,6 +7,7 @@ const API_BASE = 'https://delegate.hockstan.workers.dev/api'; // Cloudflare Work
 
 // ── State ──────────────────────────────────────────────────
 let state = {
+  exam:          '10th_bcs',
   mode:          'quiz',
   allQuestions:  [],           // Fetched or from data.js
   questions:     [],           // filtered question list
@@ -79,7 +80,7 @@ async function initApp() {
   
   // Try to load questions from Cloudflare API
   try {
-    const res = await fetch(`${API_BASE}/questions`);
+    const res = await fetch(`${API_BASE}/questions?exam=${state.exam}`);
     if (res.ok) {
       const data = await res.json();
       state.allQuestions = data.questions;
@@ -111,6 +112,44 @@ function setApiStatus(status, text) {
   $('statusText').textContent = text;
 }
 
+function changeExam() {
+  state.exam = $('examFilter').value;
+  initApp();
+}
+
+function startBankMode() {
+  const filter = $('subjectFilter').value;
+  state.questions = getFilteredQuestions(filter);
+  
+  showScreen('bankScreen');
+  const container = $('bankListContainer');
+  container.innerHTML = '';
+  
+  $('bankItemCount').textContent = `${state.questions.length} Questions`;
+
+  if (state.questions.length === 0) {
+    container.innerHTML = '<p style="color:#aaa;text-align:center;">No questions found.</p>';
+    return;
+  }
+
+  state.questions.forEach((q, i) => {
+    const item = document.createElement('div');
+    item.className = 'bank-item';
+    
+    let html = `<h3>${i+1}. ${q.q}</h3>`;
+    q.opts.forEach((opt, oIdx) => {
+      const isCorrect = (oIdx === q.ans);
+      html += `<div class="bank-opt ${isCorrect ? 'correct' : ''}">${optKey(oIdx)}) ${opt}</div>`;
+    });
+
+    if (q.note) {
+      html += `<div class="bank-note"><strong>Note:</strong> ${q.note}</div>`;
+    }
+    item.innerHTML = html;
+    container.appendChild(item);
+  });
+}
+
 // ══════════════════════════════════════════════════════════
 // HOME & LEADERBOARD
 // ══════════════════════════════════════════════════════════
@@ -134,7 +173,7 @@ async function refreshLeaderboard() {
   tbody.innerHTML = '<p class="lb-loading">লিডারবোর্ড রিফ্রেশ হচ্ছে...</p>';
   
   try {
-    const res = await fetch(`${API_BASE}/leaderboard?limit=10`);
+    const res = await fetch(`${API_BASE}/leaderboard?exam=${state.exam}&subject=${state.selectedFilter}&limit=10`);
     if (!res.ok) throw new Error('Failed');
     const data = await res.json();
     
@@ -426,6 +465,7 @@ async function finishQuiz() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          exam_key: state.exam,
           player_name: state.playerName,
           subject_filter: state.selectedFilter,
           answers: answersForApi,

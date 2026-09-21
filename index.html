@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>১০তম বিসিএস প্রিলিমিনারি কুইজ</title>
-  <meta name="description" content="১০তম বিসিএস প্রিলিমিনারি প্রশ্ন সমাধান — ইন্টারেক্টিভ কুইজ অ্যাপ। ১০০টি প্রশ্নের মাধ্যমে বিসিএস পরীক্ষার প্রস্তুতি নিন।" />
+  <title>বিসিএস প্রশ্নব্যাংক</title>
+  <meta name="description" content="বিসিএস প্রিলিমিনারি প্রশ্ন সমাধান — ইন্টারেক্টিভ কুইজ ও প্রশ্নব্যাংক অ্যাপ।" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -21,8 +21,8 @@
         <div class="logo-ring"></div>
         <div class="logo-icon">&#128218;</div>
       </div>
-      <h1 class="home-title">10th BCS Quiz</h1>
-      <p class="home-subtitle">Preliminary Exam — All 100 Questions</p>
+      <h1 class="home-title">BCS Question Bank</h1>
+      <p class="home-subtitle">Interactive Quiz & Study Platform</p>
 
       <div class="api-status" id="apiStatus">
         <span class="status-dot" id="statusDot"></span>
@@ -50,6 +50,13 @@
       </div>
 
       <div class="filter-row">
+        <label for="examFilter">Select Exam:</label>
+        <select id="examFilter" onchange="changeExam()">
+          <option value="10th_bcs">10th BCS Preliminary</option>
+        </select>
+      </div>
+
+      <div class="filter-row">
         <label for="subjectFilter">Filter by subject:</label>
         <select id="subjectFilter" onchange="updateFilterInfo()">
           <option value="all">All Subjects</option>
@@ -68,7 +75,10 @@
           <span class="btn-icon">&#9654;</span> Start Quiz
         </button>
         <button class="btn-secondary" id="studyModeBtn" onclick="startStudyMode()">
-          <span class="btn-icon">&#128214;</span> Study Mode
+          <span class="btn-icon">&#128214;</span> Flashcards
+        </button>
+        <button class="btn-secondary" style="grid-column: 1 / -1;" onclick="startBankMode()">
+          <span class="btn-icon">&#128451;</span> Read Question Bank
         </button>
       </div>
 
@@ -200,6 +210,20 @@
       <button class="btn-nav" id="studyPrev" onclick="studyPrev()">&#9664; Prev</button>
       <span id="studyDotNav" class="dot-nav-label"></span>
       <button class="btn-nav btn-next" id="studyNext" onclick="studyNext()">Next &#9654;</button>
+    </div>
+  </section>
+
+  <!-- BANK SCREEN (List View) -->
+  <section id="bankScreen" class="screen">
+    <div class="quiz-header">
+      <button class="btn-icon-only" onclick="goHome()">&#8592;</button>
+      <div class="quiz-meta">
+        <span class="subject-tag">Question Bank</span>
+        <span class="progress-text" id="bankItemCount">100 Questions</span>
+      </div>
+    </div>
+    <div class="bank-list-container" id="bankListContainer">
+      <!-- Generated via JS -->
     </div>
   </section>
 
