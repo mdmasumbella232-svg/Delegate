@@ -52,6 +52,27 @@ function showScreen(id) {
   requestAnimationFrame(() => el.classList.add('active'));
 }
 
+// ── Particles ──────────────────────────────────────────────
+function spawnParticles() {
+  const container = $('bgParticles');
+  const colors = ['rgba(245,200,66,', 'rgba(59,130,246,', 'rgba(34,197,94,', 'rgba(167,139,250,'];
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 5 + 2;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const opacity = (Math.random() * 0.3 + 0.1).toFixed(2);
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      background:${color}${opacity});
+      animation-duration:${Math.random()*20+10}s;
+      animation-delay:-${Math.random()*20}s;
+    `;
+    container.appendChild(p);
+  }
+}
+
 // ── API Integration ────────────────────────────────────────
 async function initApp() {
   spawnParticles();
