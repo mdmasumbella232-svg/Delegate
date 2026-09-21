@@ -3,7 +3,7 @@
 // ============================================================
 
 // ── Configuration ──────────────────────────────────────────
-const API_BASE = 'https://bcs-quiz-worker.hockstan.workers.dev/api'; // Cloudflare Worker URL
+const API_BASE = 'https://delegate.hockstan.workers.dev/api'; // Cloudflare Worker URL
 
 // ── State ──────────────────────────────────────────────────
 let state = {

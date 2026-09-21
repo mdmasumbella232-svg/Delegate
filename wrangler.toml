@@ -2,7 +2,7 @@
 # Cloudflare Pages + Workers + D1 Config — BCS Quiz App
 # ==============================================================
 
-name = "bcs-quiz-worker"
+name = "delegate"
 main = "worker/index.js"
 compatibility_date = "2024-01-01"
 
